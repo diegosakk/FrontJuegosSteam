@@ -1,11 +1,11 @@
 
-const cargarSucursal = () => {
+const cargarJuegos = () => {
     fetch('https://localhost:7247/api/sucursal')
         .then(response => response.json())
-        .then(sucursales => {
-            if (sucursales.success) {
+        .then(juegos => {
+            if (juegos.success) {
                 let tabla = ''
-                sucursales.data.forEach(s => {
+                juegos.data.forEach(s => {
                     tabla += `
                         <tr>
                             <td>${s.ciudad}</td>

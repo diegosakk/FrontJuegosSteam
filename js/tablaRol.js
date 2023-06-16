@@ -1,15 +1,15 @@
 
-const cargarEditor = () => {
-    fetch('https://localhost:7214/api/Editor')
+const cargarRol = () => {
+    fetch('https://localhost:7214/api/Role')
         .then(response => response.json())
-        .then(editor => {
-            if (editor.success) {
+        .then(rol => {
+            if (rol.success) {
                 let tabla = ''
-                editor.data.forEach(s => {
+                rol.data.forEach(s => {
                     tabla += `
                         <tr>
                             <td>${s.nombre}</td>
-                            <td>${s.pais}</td>
+                            <td>${s.permisos}</td>
                         <td nowrap>
                                 <button class="btn btn-warning text-white" onclick="editar(${s.id})">
                                     Editar
@@ -29,42 +29,42 @@ const cargarEditor = () => {
         })
 }
 const crear = () => {
-    const editor = {
+    const rol = {
         Nombre: document.getElementById('nombre').value.trim(),
-        Pais: document.getElementById('pais').value.trim(),
+        Permisos: document.getElementById('rol').value.trim(),
 
     }
 
-    fetch('https://localhost:7214/api/Editor', {
+    fetch('https://localhost:7214/api/Role', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(editor)
+        body: JSON.stringify(rol)
     }).then(response => {
         console.log(response.json())
 
-        cargarEditor()
+        cargarRol()
         var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('saveModal'));
         myModal.hide();
         limpiar()
     })
 }
 const modificar = () => {
-    const editor = {
+    const rol = {
         Id: document.getElementById('id').value,
         Nombre: document.getElementById('nombre').value.trim(),
-        Pais: document.getElementById('pais').value.trim(),
+        Permisos: document.getElementById('rol').value.trim(),
     }
 
-    fetch('https://localhost:7214/api/Editor/' + document.getElementById('id').value, {
+    fetch('https://localhost:7214/api/Role/' + document.getElementById('id').value, {
         method: 'put',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(editor)
+        body: JSON.stringify(rol)
     }).then(response => {
-        cargarEditor()
+        cargarRol()
         const myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
         myModal.hide();
         limpiar()
@@ -86,7 +86,7 @@ const limpiar = () => {
 const eliminar = (id) => {
     //levanta sweetalert que indica si se quiere eliminar
     Swal.fire({
-        title: '¿Estás seguro de eliminar el editor?',
+        title: '¿Estás seguro de eliminar el rol?',
         text: 'No podrás recuperarla después de eliminarla',
         icon: 'warning',
         showCancelButton: true,
@@ -96,15 +96,15 @@ const eliminar = (id) => {
     }).then((result) => {
         if (result.isConfirmed) {
             //consumir api eliminar
-            fetch(`https://localhost:7214/api/Editor/${id}`, {
+            fetch(`https://localhost:7214/api/Role/${id}`, {
                 method: 'delete'
             }).then(response => {
                 Swal.fire(
                     'Eliminado',
-                    'El editor ha sido eliminado con éxito',
+                    'El rol ha sido eliminado con éxito',
                     'success'
                 )
-                cargarEditor()
+                cargarRol()
             })
 
         }
@@ -112,17 +112,17 @@ const eliminar = (id) => {
 }
 
 const editar = (id) => {
-    fetch(`https://localhost:7214/api/Editor/${id}`)
+    fetch(`https://localhost:7214/api/Role/${id}`)
         .then(response => response.json())
-        .then(editor => {
-            if (editor.success) {
-                document.getElementById('id').value = editor.data.id
-                document.getElementById('nombre').value = editor.data.nombre
-                document.getElementById('pais').value = editor.data.pais
+        .then(rol => {
+            if (rol.success) {
+                document.getElementById('id').value = rol.data.id
+                document.getElementById('nombre').value = rol.data.nombre
+                document.getElementById('rol').value = rol.data.permisos
 
                 const modalSave = new bootstrap.Modal(document.getElementById('modalSave'))
                 modalSave.show()
             }
         })
 }
-cargarEditor()
+cargarRol()

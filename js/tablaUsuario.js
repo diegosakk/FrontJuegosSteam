@@ -1,16 +1,19 @@
 
-const cargarEditor = () => {
-    fetch('https://localhost:7214/api/Editor')
+const cargarUsuarios = () => {
+    fetch('https://localhost:7214/api/Usuario')
         .then(response => response.json())
-        .then(editor => {
-            if (editor.success) {
+        .then(usuario => {
+            if (usuario.success) {
                 let tabla = ''
-                editor.data.forEach(s => {
+                usuario.data.forEach(s => {
                     tabla += `
                         <tr>
                             <td>${s.nombre}</td>
-                            <td>${s.pais}</td>
-                        <td nowrap>
+                            <td>${s.rut}</td>
+                            <td>${s.correo}</td>
+                            <td>${s.telefono}</td>
+                            <td>${s.permisoss}</td>
+                            <td nowrap>
                                 <button class="btn btn-warning text-white" onclick="editar(${s.id})">
                                     Editar
                                 </button>
@@ -29,42 +32,47 @@ const cargarEditor = () => {
         })
 }
 const crear = () => {
-    const editor = {
+    const usuario = {
         Nombre: document.getElementById('nombre').value.trim(),
-        Pais: document.getElementById('pais').value.trim(),
-
+        RUT: document.getElementById('rut').value.trim(),
+        Correo: document.getElementById('correo').value.trim(),
+        Telefono: document.getElementById('telefono').value.trim(),
+        Roles: document.getElementById('roles').value.trim(),
     }
 
-    fetch('https://localhost:7214/api/Editor', {
+    fetch('https://localhost:7214/api/Usuario', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(editor)
+        body: JSON.stringify(usuario)
     }).then(response => {
         console.log(response.json())
 
-        cargarEditor()
+        cargarusuario()
         var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('saveModal'));
         myModal.hide();
         limpiar()
     })
 }
 const modificar = () => {
-    const editor = {
+    const usuario = {
         Id: document.getElementById('id').value,
         Nombre: document.getElementById('nombre').value.trim(),
-        Pais: document.getElementById('pais').value.trim(),
+        RUT: document.getElementById('rut').value.trim(),
+        Correo: document.getElementById('correo').value.trim(),
+        Telefono: document.getElementById('telefono').value.trim(),
+        Roles: document.getElementById('roles').value.trim(),
     }
 
-    fetch('https://localhost:7214/api/Editor/' + document.getElementById('id').value, {
+    fetch('hhttps://localhost:7214/api/Usuario/' + document.getElementById('id').value, {
         method: 'put',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(editor)
+        body: JSON.stringify(usuario)
     }).then(response => {
-        cargarEditor()
+        cargarusuario()
         const myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
         myModal.hide();
         limpiar()
@@ -82,11 +90,11 @@ const limpiar = () => {
         e.value = ''
     })
 }
-
+//método para eliminar una usuario
 const eliminar = (id) => {
     //levanta sweetalert que indica si se quiere eliminar
     Swal.fire({
-        title: '¿Estás seguro de eliminar el editor?',
+        title: '¿Estás seguro de eliminar la usuario?',
         text: 'No podrás recuperarla después de eliminarla',
         icon: 'warning',
         showCancelButton: true,
@@ -96,15 +104,15 @@ const eliminar = (id) => {
     }).then((result) => {
         if (result.isConfirmed) {
             //consumir api eliminar
-            fetch(`https://localhost:7214/api/Editor/${id}`, {
+            fetch(`https://localhost:7214/api/Usuario/${id}`, {
                 method: 'delete'
             }).then(response => {
                 Swal.fire(
                     'Eliminado',
-                    'El editor ha sido eliminado con éxito',
+                    'La usuario ha sido eliminado con éxito',
                     'success'
                 )
-                cargarEditor()
+                cargarusuario()
             })
 
         }
@@ -112,17 +120,20 @@ const eliminar = (id) => {
 }
 
 const editar = (id) => {
-    fetch(`https://localhost:7214/api/Editor/${id}`)
+    fetch(`https://localhost:7214/api/Usuario/${id}`)
         .then(response => response.json())
-        .then(editor => {
-            if (editor.success) {
-                document.getElementById('id').value = editor.data.id
-                document.getElementById('nombre').value = editor.data.nombre
-                document.getElementById('pais').value = editor.data.pais
+        .then(usuario => {
+            if (usuario.success) {
+                document.getElementById('id').value = usuario.data.id
+                document.getElementById('nombre').value = usuario.data.nombre
+                document.getElementById('rut').value = usuario.data.rut
+                document.getElementById('correo').value = usuario.data.correos
+                document.getElementById('telefono').value = usuario.data.telefono
+                document.getElementById('roles').value = usuario.data.roles
 
                 const modalSave = new bootstrap.Modal(document.getElementById('modalSave'))
                 modalSave.show()
             }
         })
 }
-cargarEditor()
+cargarUsuarios()

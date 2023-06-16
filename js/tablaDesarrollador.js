@@ -1,11 +1,11 @@
 
-const cargarEditor = () => {
-    fetch('https://localhost:7214/api/Editor')
+const cargarDesarrollador = () => {
+    fetch('https://localhost:7214/api/Desarrollador')
         .then(response => response.json())
-        .then(editor => {
-            if (editor.success) {
+        .then(desarrollador => {
+            if (desarrollador.success) {
                 let tabla = ''
-                editor.data.forEach(s => {
+                desarrollador.data.forEach(s => {
                     tabla += `
                         <tr>
                             <td>${s.nombre}</td>
@@ -29,42 +29,42 @@ const cargarEditor = () => {
         })
 }
 const crear = () => {
-    const editor = {
+    const desarrollador = {
         Nombre: document.getElementById('nombre').value.trim(),
         Pais: document.getElementById('pais').value.trim(),
 
     }
 
-    fetch('https://localhost:7214/api/Editor', {
+    fetch('https://localhost:7214/api/Desarrollador', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(editor)
+        body: JSON.stringify(desarrollador)
     }).then(response => {
         console.log(response.json())
 
-        cargarEditor()
+        cargarDesarrollador()
         var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('saveModal'));
         myModal.hide();
         limpiar()
     })
 }
 const modificar = () => {
-    const editor = {
+    const desarrollador = {
         Id: document.getElementById('id').value,
         Nombre: document.getElementById('nombre').value.trim(),
         Pais: document.getElementById('pais').value.trim(),
     }
 
-    fetch('https://localhost:7214/api/Editor/' + document.getElementById('id').value, {
+    fetch('https://localhost:7214/api/Desarrollador/' + document.getElementById('id').value, {
         method: 'put',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(editor)
+        body: JSON.stringify(desarrollador)
     }).then(response => {
-        cargarEditor()
+        cargarDesarrollador()
         const myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
         myModal.hide();
         limpiar()
@@ -86,7 +86,7 @@ const limpiar = () => {
 const eliminar = (id) => {
     //levanta sweetalert que indica si se quiere eliminar
     Swal.fire({
-        title: '¿Estás seguro de eliminar el editor?',
+        title: '¿Estás seguro de eliminar el desarrollador?',
         text: 'No podrás recuperarla después de eliminarla',
         icon: 'warning',
         showCancelButton: true,
@@ -96,15 +96,15 @@ const eliminar = (id) => {
     }).then((result) => {
         if (result.isConfirmed) {
             //consumir api eliminar
-            fetch(`https://localhost:7214/api/Editor/${id}`, {
+            fetch(`https://localhost:7214/api/Desarrollador/${id}`, {
                 method: 'delete'
             }).then(response => {
                 Swal.fire(
                     'Eliminado',
-                    'El editor ha sido eliminado con éxito',
+                    'El desarrollador ha sido eliminado con éxito',
                     'success'
                 )
-                cargarEditor()
+                cargarDesarrollador()
             })
 
         }
@@ -112,17 +112,17 @@ const eliminar = (id) => {
 }
 
 const editar = (id) => {
-    fetch(`https://localhost:7214/api/Editor/${id}`)
+    fetch(`https://localhost:7214/api/Desarrollador/${id}`)
         .then(response => response.json())
-        .then(editor => {
-            if (editor.success) {
-                document.getElementById('id').value = editor.data.id
-                document.getElementById('nombre').value = editor.data.nombre
-                document.getElementById('pais').value = editor.data.pais
+        .then(desarrollador => {
+            if (desarrollador.success) {
+                document.getElementById('id').value = desarrollador.data.id
+                document.getElementById('nombre').value = desarrollador.data.nombre
+                document.getElementById('pais').value = desarrollador.data.pais
 
                 const modalSave = new bootstrap.Modal(document.getElementById('modalSave'))
                 modalSave.show()
             }
         })
 }
-cargarEditor()
+cargarDesarrollador()

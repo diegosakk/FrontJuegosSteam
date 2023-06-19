@@ -64,6 +64,31 @@ const crear = () => {
         return;
     }
 
+    if (!validarTelefono(telefono)) {
+        Swal.fire({
+            title: 'Teléfono inválido',
+            text: 'Por favor ingresa un número de teléfono válido',
+            icon: 'error',
+        });
+        return;
+    }
+
+    if (!validarRut(rut)) {
+        Swal.fire({
+            title: 'RUT inválido',
+            text: 'Por favor ingresa un RUT chileno válido',
+            icon: 'error',
+        });
+        return;
+    }
+    if (!validarCorreo(correo)) {
+        Swal.fire({
+            title: 'Correo inválido',
+            text: 'Por favor ingresa un correo electrónico válido',
+            icon: 'error',
+        });
+        return;
+    }
     const usuario = {
         nombre: nombre,
         rut: rut,
@@ -117,6 +142,31 @@ const modificar = () => {
         Swal.fire({
             title: 'Campos requeridos',
             text: 'Por favor completa todos los campos',
+            icon: 'error',
+        });
+        return;
+    }
+    if (!validarTelefono(telefono)) {
+        Swal.fire({
+            title: 'Teléfono inválido',
+            text: 'Por favor ingresa un número de teléfono válido',
+            icon: 'error',
+        });
+        return;
+    }
+
+    if (!validarRut(rut)) {
+        Swal.fire({
+            title: 'RUT inválido',
+            text: 'Por favor ingresa un RUT chileno válido',
+            icon: 'error',
+        });
+        return;
+    }
+    if (!validarCorreo(correo)) {
+        Swal.fire({
+            title: 'Correo inválido',
+            text: 'Por favor ingresa un correo electrónico válido',
             icon: 'error',
         });
         return;
@@ -227,5 +277,34 @@ const editar = id => {
             }
         });
 };
+const validarTelefono = telefono => {
+    const telefonoRegex = /^[0-9]+$/;
+    return telefonoRegex.test(telefono);
+};
 
+const validarRut = rut => {
+    const rutRegex = /^0*(\d{1,3}(\.?\d{3})*)\-?([\dkK])$/;
+    if (!rutRegex.test(rut)) {
+        return false;
+    }
+    const cleanRut = rut.replace(/\./g, '').replace('-', '');
+    const dv = cleanRut.slice(-1);
+    const rutNumber = parseInt(cleanRut.slice(0, -1), 10);
+    let factor = 2;
+    let sum = 0;
+    let checkDigit;
+    for (let i = rutNumber.toString().length - 1; i >= 0; i--) {
+        sum += parseInt(rutNumber.toString().charAt(i), 10) * factor;
+        factor = factor === 7 ? 2 : factor + 1;
+    }
+    checkDigit = 11 - (sum % 11);
+    checkDigit = checkDigit === 11 ? 0 : checkDigit === 10 ? 'K' : checkDigit.toString();
+
+    return checkDigit === dv.toUpperCase();
+};
+
+const validarCorreo = correo => {
+    const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return correoRegex.test(correo);
+};
 cargarUsuario();

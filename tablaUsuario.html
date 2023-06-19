@@ -76,7 +76,8 @@
 
 
   <!-- Modal -->
-  <div class="modal fade" id="modalSave" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal fade" id="modalSave" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    data-bs-backdrop="static">
     <div class="modal-dialog">
       <form id="formusuario">
         <div class="modal-content">
@@ -88,19 +89,23 @@
           <div class="modal-body">
             <input type="hidden" id="id" class="form-control">
             <div class="mb-3">
-              <input type="text" class="form-control" placeholder="Ingresa Nombre" id="nombre">
+              <label for="nombre" class="form-control">Nombre</label>
+              <input type="text" class="form-control" placeholder="Ingresa Nombre" maxlength="50" id="nombre">
             </div>
             <div class="mb-3">
-              <input type="text" class="form-control" placeholder="Ingresa RUT" id="rut">
+              <label for="rut" class="form-control">RUT</label>
+              <input type="text" class="form-control" placeholder="Ingresa RUT" maxlength="10" id="rut">
             </div>
             <div class="mb-3">
-              <input type="email" class="form-control" placeholder="Ingresa Correo" id="correo">
+              <label for="correo" class="form-control">Correo</label>
+              <input type="email" class="form-control" placeholder="Ingresa Correo" maxlength="50" id="correo">
             </div>
             <div class="mb-3">
-              <input type="number" class="form-control" placeholder="Ingresa Telefono" id="telefono">
+              <label for="telefono" class="form-control">Telefono</label>
+              <input type="number" class="form-control" placeholder="Ingresa Telefono" maxlength="9" id="telefono">
             </div>
             <div class="mb-3">
-
+              <label for="roles" class="form-control">Roles</label>
               <select class="form-select" id="roles">
                 <option value="">Selecciona un rol</option>
               </select>

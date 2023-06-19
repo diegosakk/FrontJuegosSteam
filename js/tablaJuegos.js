@@ -1,5 +1,5 @@
 const cargarJuegos = () => {
-    fetch('https://localhost:7214/api/juego')
+    fetch('https://localhost:7214/api/Juego')
         .then(response => response.json())
         .then(juegos => {
             if (juegos.success) {
@@ -26,23 +26,111 @@ const cargarJuegos = () => {
                     `
                 })
                 document.getElementById('listarDatos').innerHTML = tabla
+                // Obtener los roles y agregarlos al select
+                fetch('https://localhost:7214/api/Categoria')
+                    .then(response => response.json())
+                    .then(categoria => {
+                        if (categoria.success) {
+                            let options = '<option value="">Selecciona una categoria</option>';
+                            categoria.data.forEach(categoria => {
+                                options += `<option value="${categoria.id}">${categoria.nombre}</option>`;
+                            });
+                            document.getElementById('categoria').innerHTML = options;
+                        } else {
+                            console.error('Error al obtener las categorias:', categoria.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error en la solicitud de obtener las categorias:', error);
+                    });
+                // Obtener los roles y agregarlos al select
+                fetch('https://localhost:7214/api/Desarrollador')
+                    .then(response => response.json())
+                    .then(desarrollador => {
+                        if (desarrollador.success) {
+                            let options = '<option value="">Selecciona un desarrollador</option>';
+                            desarrollador.data.forEach(desarrollador => {
+                                options += `<option value="${desarrollador.id}">${desarrollador.nombre}</option>`;
+                            });
+                            document.getElementById('desarrollador').innerHTML = options;
+                        } else {
+                            console.error('Error al obtener los desarrolladores:', desarrollador.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error en la solicitud de obtener los desarrollladores:', error);
+                    });
+                // Obtener los roles y agregarlos al select
+                fetch('https://localhost:7214/api/Editor')
+                    .then(response => response.json())
+                    .then(editor => {
+                        if (editor.success) {
+                            let options = '<option value="">Selecciona un editor</option>';
+                            editor.data.forEach(editor => {
+                                options += `<option value="${editor.id}">${editor.nombre}</option>`;
+                            });
+                            document.getElementById('editor').innerHTML = options;
+                        } else {
+                            console.error('Error al obtener los editores:', editor.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error en la solicitud de obtener los editores:', error);
+                    });
+                // Obtener los roles y agregarlos al select
+                fetch('https://localhost:7214/api/Usuario')
+                    .then(response => response.json())
+                    .then(usuario => {
+                        if (usuario.success) {
+                            let options = '<option value="">Selecciona un usuario</option>';
+                            usuario.data.forEach(usuario => {
+                                options += `<option value="${usuario.id}">${usuario.nombre}</option>`;
+                            });
+                            document.getElementById('usuario').innerHTML = options;
+                        } else {
+                            console.error('Error al obtener los usuario:', usuario.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error en la solicitud de obtener las usuario:', error);
+                    });
+            } else {
+                document.getElementById('tablita').hidden = false;
             }
-            else {
-                document.getElementById('tablita').hidden = false
-            }
-        })
-}
-const crear = () => {
-    const juego = {
-        Nombre: document.getElementById('nombre').value.trim(),
-        Categoria: document.getElementById('categoria').value.trim(),
-        Desarrollador: document.getElementById('desarrollador').value.trim(),
-        Editor: document.getElementById('editor').value.trim(),
-        Plataforma: document.getElementById('plataforma').value.trim(),
-        Precio: document.getElementById('precio').value.trim(),
-        Usuario_registrado: document.getElementById('usuario').value.trim(),
+        });
+};
 
+const crear = () => {
+
+    const nombre = document.getElementById('nombre').value.trim();
+    const categoria = document.getElementById('categoria').value.trim();
+    const desarrollador = document.getElementById('desarrollador').value.trim();
+    const editor = document.getElementById('editor').value.trim();
+    const plataforma = document.getElementById('plataforma').value.trim();
+    const precio = document.getElementById('precio').value.trim();
+    const usuario_registrado = document.getElementById('usuario').value.trim();
+
+
+    if (nombre == '' || categoria == '' || desarrollador == '' || editor == '' || plataforma == '' || precio == '' || usuario_registrado == '') {
+        Swal.fire({
+            title: 'Campos requeridos',
+            text: 'Por favor completa todos los campos',
+            icon: 'error',
+        });
+        return;
     }
+
+
+    const juego = {
+        nombre: nombre,
+        categoria: categoria,
+        desarrollador: desarrollador,
+        editor: editor,
+        plataforma: plataforma,
+        precio: precio,
+        usuario_registrado: usuario_registrado,
+
+    };
 
     fetch('https://localhost:7214/api/juego', {
         method: 'post',
@@ -60,18 +148,36 @@ const crear = () => {
     })
 }
 const modificar = () => {
-    const juego = {
-        Id: document.getElementById('id').value,
-        Nombre: document.getElementById('nombre').value.trim(),
-        Categoria: document.getElementById('categoria').value.trim(),
-        Desarrollador: document.getElementById('desarrollador').value.trim(),
-        Editor: document.getElementById('editor').value.trim(),
-        Plataforma: document.getElementById('plataforma').value.trim(),
-        Precio: document.getElementById('precio').value.trim(),
-        Usuario_registrado: document.getElementById('usuario').value.trim(),
+    const nombre = document.getElementById('nombre').value.trim();
+    const categoria = document.getElementById('categoria').value.trim();
+    const desarrollador = document.getElementById('desarrollador').value.trim();
+    const editor = document.getElementById('editor').value.trim();
+    const plataforma = document.getElementById('plataforma').value.trim();
+    const precio = document.getElementById('precio').value.trim();
+    const usuario_registrado = document.getElementById('usuario').value.trim();
 
 
+    if (nombre == '' || categoria == '' || desarrollador == '' || editor == '' || plataforma == '' || precio == '' || usuario_registrado == '') {
+        Swal.fire({
+            title: 'Campos requeridos',
+            text: 'Por favor completa todos los campos',
+            icon: 'error',
+        });
+        return;
     }
+
+
+
+    const juego = {
+        nombre: nombre,
+        categoria: categoria,
+        desarrollador: desarrollador,
+        editor: editor,
+        plataforma: plataforma,
+        precio: precio,
+        usuario_registrado: usuario_registrado,
+
+    };
 
     fetch('https://localhost:7214/api/juego/' + document.getElementById('id').value, {
         method: 'put',
@@ -112,15 +218,15 @@ const eliminar = (id) => {
     }).then((result) => {
         if (result.isConfirmed) {
             //consumir api eliminar
-            fetch(`https://localhost:7214/api/sucursal/${id}`, {
+            fetch(`https://localhost:7214/api/Juego/${id}`, {
                 method: 'delete'
             }).then(response => {
                 Swal.fire(
                     'Eliminado',
-                    'La sucursal ha sido eliminado con éxito',
+                    'EL Juego ha sido eliminado con éxito',
                     'success'
                 )
-                cargarSucursal()
+                cargarJuegos()
             })
 
         }
@@ -128,7 +234,7 @@ const eliminar = (id) => {
 }
 
 const editar = (id) => {
-    fetch(`https://localhost:7214/api/juego/${id}`)
+    fetch(`https://localhost:7214/api/Juego/${id}`)
         .then(response => response.json())
         .then(juego => {
             if (juego.success) {
@@ -149,4 +255,9 @@ const editar = (id) => {
         })
 }
 
-cargarSucursal();
+
+
+
+
+
+cargarJuegos();

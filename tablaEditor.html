@@ -52,19 +52,19 @@
   <div class="container">
     <div class="text-end mt-3">
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSave">
-        Nuevo Juego
+        Nuevo Editor
       </button>
     </div>
     <div class="table-responsive p-3" id="tablaJuegos">
       <table class="table table-bordered">
         <thead class="bg-dark text-white">
           <tr>
-            <th>Nombre</th>
-            <th>Descripcion</th>
-            <th>Acciones</th>
+            <th class="text-center">Nombre</th>
+            <th class="text-center">Descripcion</th>
+            <th class="text-center">Acciones</th>
           </tr>
         </thead>
-        <tbody id="listarDatos">
+        <tbody class="text-center" id="listarDatos">
 
         </tbody>
       </table>
@@ -73,21 +73,22 @@
 
 
   <!-- Modal -->
-  <div class="modal fade" id="modalSave" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="modalSave" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog">
-      <form [formGroup]="formeditor">
+      <form id="formeditor">
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="name">Crear Juego</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button onclick="limpiar()" type="button" class="btn-close" data-bs-dismiss="modal"
+              aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <input type="hidden" id="id" class="form-control">
             <div class="mb-3">
-              <input type="text" required class="form-control" placeholder="Ingresa Nombre" id="nombre">
+              <input type="text" required class="form-control" placeholder="Ingresa Nombre" maxlength="50" id="nombre">
             </div>
             <div class="mb-3">
-              <input type="text" required class="form-control" placeholder="Ingresa Pais" id="pais">
+              <input type="text" required class="form-control" placeholder="Ingresa Pais" maxlength="50" id="pais">
             </div>
           </div>
           <div class="modal-footer">

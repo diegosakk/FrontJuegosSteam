@@ -52,22 +52,22 @@
   <div class="container">
     <div class="text-end mt-3">
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSave">
-        Nuevo Juego
+        Nuevo Usuario
       </button>
     </div>
     <div class="table-responsive p-3" id="tablaJuegos">
       <table class="table table-bordered">
         <thead class="bg-dark text-white">
           <tr>
-            <th>Nombre</th>
-            <th>RUT</th>
-            <th>Correo</th>
-            <th>Telefono</th>
-            <th>Roles</th>
-            <th>Acciones</th>
+            <th class="text-center">Nombre</th>
+            <th class="text-center">RUT</th>
+            <th class="text-center"> Correo</th>
+            <th class="text-center">Telefono</th>
+            <th class="text-center">Roles</th>
+            <th class="text-center">Acciones</th>
           </tr>
         </thead>
-        <tbody id="listarDatos">
+        <tbody class="text-center" id="listarDatos">
 
         </tbody>
       </table>
@@ -76,40 +76,44 @@
 
 
   <!-- Modal -->
-  <div class="modal fade" id="modalSave" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="modalSave" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="name">Crear Juego</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" id="id" class="form-control">
-          <div class="mb-3">
-            <input type="text" class="form-control" placeholder="Ingresa Nombre" id="nombre">
+      <form id="formusuario">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="name">Crear Usuarios</h1>
+            <button onclick="limpiar()" type="button" class="btn-close" data-bs-dismiss="modal"
+              aria-label="Close"></button>
           </div>
-          <div class="mb-3">
-            <input type="text" class="form-control" placeholder="Ingresa RUT" id="rut">
-          </div>
-          <div class="mb-3">
-            <input type="text" class="form-control" placeholder="Ingresa Correo" id="correo">
-          </div>
-          <div class="mb-3">
-            <input type="text" class="form-control" placeholder="Ingresa Telefono" id="telefono">
-          </div>
-          <div class="mb-3">
+          <div class="modal-body">
+            <input type="hidden" id="id" class="form-control">
+            <div class="mb-3">
+              <input type="text" class="form-control" placeholder="Ingresa Nombre" id="nombre">
+            </div>
+            <div class="mb-3">
+              <input type="text" class="form-control" placeholder="Ingresa RUT" id="rut">
+            </div>
+            <div class="mb-3">
+              <input type="email" class="form-control" placeholder="Ingresa Correo" id="correo">
+            </div>
+            <div class="mb-3">
+              <input type="number" class="form-control" placeholder="Ingresa Telefono" id="telefono">
+            </div>
+            <div class="mb-3">
 
-            <select class="form-select" id="roles" required>
-              <option value="">Selecciona un rol</option>
-            </select>
+              <select class="form-select" id="roles">
+                <option value="">Selecciona un rol</option>
+              </select>
 
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            <button type="button" id="btnSave" onclick="guardar()" class="btn btn-primary">Guardar</button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" onclick="limpiar()"
+                data-bs-dismiss="modal">Cerrar</button>
+              <button type="button" id="btnSave" onclick="guardar()" class="btn btn-primary">Guardar</button>
+            </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/tablaUsuario.js"></script>

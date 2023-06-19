@@ -118,12 +118,17 @@ const modificar = () => {
                 icon: 'success',
             });
         } else {
-            // Manejar errores de respuesta aquí
-            throw new Error('Error al modificar el desarrollador');
+            response.json().then(data => {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message,
+                    icon: 'error',
+                });
+            });
         }
     }).catch(error => {
         // Manejar errores de red u otros errores
-        console.error('Error en la solicitud de modificar el desarrollador:', error);
+        console.error('Error en la solicitud de editar el desarrollador:', error);
     });
 }
 const guardar = () => {
@@ -149,10 +154,10 @@ const limpiar = () => {
 }
 
 const eliminar = (id) => {
-    //levanta sweetalert que indica si se quiere eliminar
+    // Levanta SweetAlert que indica si se quiere eliminar
     Swal.fire({
         title: '¿Estás seguro de eliminar el desarrollador?',
-        text: 'No podrás recuperarla después de eliminarla',
+        text: 'No podrás recuperarlo después de eliminarlo',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -160,21 +165,37 @@ const eliminar = (id) => {
         confirmButtonText: 'Eliminar',
     }).then((result) => {
         if (result.isConfirmed) {
-            //consumir api eliminar
+            // Consumir API para eliminar
             fetch(`https://localhost:7214/api/Desarrollador/${id}`, {
-                method: 'delete'
-            }).then(response => {
-                Swal.fire(
-                    'Eliminado',
-                    'El desarrollador ha sido eliminado con éxito',
-                    'success'
-                )
-                cargarDesarrollador()
+                method: 'delete',
             })
-
+                .then((response) => {
+                    if (response.ok) {
+                        Swal.fire(
+                            'Eliminado',
+                            'El desarrollador ha sido eliminado con éxito',
+                            'success'
+                        );
+                        cargarDesarrollador();
+                    } else {
+                        Swal.fire(
+                            'Error',
+                            'No se puede eliminar el desarrollador asociado a un juego',
+                            'error'
+                        );
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    Swal.fire(
+                        'Error',
+                        'Ocurrió un error al eliminar el desarrollador',
+                        'error'
+                    );
+                });
         }
-    })
-}
+    });
+};
 
 const editar = (id) => {
     fetch(`https://localhost:7214/api/Desarrollador/${id}`)

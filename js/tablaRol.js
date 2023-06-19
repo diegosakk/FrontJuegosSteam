@@ -1,4 +1,3 @@
-
 const cargarRol = () => {
     fetch('https://localhost:7214/api/Role')
         .then(response => response.json())
@@ -10,7 +9,7 @@ const cargarRol = () => {
                         <tr>
                             <td>${s.nombre}</td>
                             <td>${s.permisos}</td>
-                        <td nowrap>
+                         <td nowrap>
                                 <button class="btn btn-warning text-white" onclick="editar(${s.id})">
                                     Editar
                                 </button>
@@ -29,11 +28,25 @@ const cargarRol = () => {
         })
 }
 const crear = () => {
-    const rol = {
-        Nombre: document.getElementById('nombre').value.trim(),
-        Permisos: document.getElementById('rol').value.trim(),
 
+    const nombre = document.getElementById('nombre').value.trim();
+    const permisos = document.getElementById('rol').value.trim();
+    // Validar campos requeridos
+    if (!nombre || !permisos) {
+        Swal.fire({
+            title: 'Campos requeridos',
+            text: 'Por favor completa todos los campos',
+            icon: 'error',
+
+        });
+        return; // Detener la ejecución si hay campos requeridos vacíos
     }
+
+    const rol = {
+        nombre: nombre,
+        permisos: permisos,
+    }
+
 
     fetch('https://localhost:7214/api/Role', {
         method: 'post',
@@ -42,34 +55,82 @@ const crear = () => {
         },
         body: JSON.stringify(rol)
     }).then(response => {
-        console.log(response.json())
-
-        cargarRol()
-        var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('saveModal'));
-        myModal.hide();
-        limpiar()
-    })
+        if (response.ok) {
+            cargarRol();
+            var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
+            myModal.hide();
+            limpiar();
+            Swal.fire({
+                title: 'Guardado',
+                text: 'El rol ha sido guardado con éxito',
+                icon: 'success',
+            });
+        } else {
+            response.json().then(data => {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message,
+                    icon: 'error',
+                });
+            });
+        }
+    }).catch(error => {
+        // Manejar errores de red u otros errores
+        console.error('Error en la solicitud de guardar el rol:', error);
+    });
 }
+
+
 const modificar = () => {
+    const id = document.getElementById('id').value;
+    const nombre = document.getElementById('nombre').value.trim();
+    const permisos = document.getElementById('rol').value.trim();
+
+    if (!nombre || !permisos) {
+        Swal.fire({
+            title: 'Campos requeridos',
+            text: 'Por favor completa todos los campos',
+            icon: 'error',
+
+        });
+        return; // Detener la ejecución si hay campos requeridos vacíos
+    }
     const rol = {
-        Id: document.getElementById('id').value,
-        Nombre: document.getElementById('nombre').value.trim(),
-        Permisos: document.getElementById('rol').value.trim(),
+        Id: id,
+        Nombre: nombre,
+        Permisos: permisos,
     }
 
-    fetch('https://localhost:7214/api/Role/' + document.getElementById('id').value, {
-        method: 'put',
+    fetch('https://localhost:7214/api/Role/' + id, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(rol)
     }).then(response => {
-        cargarRol()
-        const myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
-        myModal.hide();
-        limpiar()
-    })
-
+        if (response.ok) {
+            cargarRol();
+            const myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
+            myModal.hide();
+            limpiar();
+            Swal.fire({
+                title: 'Modificado',
+                text: 'El rol ha sido modificado con éxito',
+                icon: 'success',
+            });
+        } else {
+            response.json().then(data => {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message,
+                    icon: 'error',
+                });
+            });
+        }
+    }).catch(error => {
+        // Manejar errores de red u otros errores
+        console.error('Error en la solicitud de editar el rol:', error);
+    });
 }
 const guardar = () => {
     if (document.getElementById('id').value == '')
@@ -80,14 +141,17 @@ const guardar = () => {
 const limpiar = () => {
     document.querySelectorAll('.form-control').forEach(e => {
         e.value = ''
+        e.parentElement.classList.remove('is-valid');
     })
+    const formRol = document.getElementById('formrol');
+    formRol.reset();
 }
 
 const eliminar = (id) => {
-    //levanta sweetalert que indica si se quiere eliminar
+    // Levanta SweetAlert que indica si se quiere eliminar
     Swal.fire({
         title: '¿Estás seguro de eliminar el rol?',
-        text: 'No podrás recuperarla después de eliminarla',
+        text: 'No podrás recuperarlo después de eliminarlo',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -95,21 +159,37 @@ const eliminar = (id) => {
         confirmButtonText: 'Eliminar',
     }).then((result) => {
         if (result.isConfirmed) {
-            //consumir api eliminar
+            // Consumir API para eliminar
             fetch(`https://localhost:7214/api/Role/${id}`, {
-                method: 'delete'
-            }).then(response => {
-                Swal.fire(
-                    'Eliminado',
-                    'El rol ha sido eliminado con éxito',
-                    'success'
-                )
-                cargarRol()
+                method: 'delete',
             })
-
+                .then((response) => {
+                    if (response.ok) {
+                        Swal.fire(
+                            'Eliminado',
+                            'El rol ha sido eliminado con éxito',
+                            'success'
+                        );
+                        cargarRol();
+                    } else {
+                        Swal.fire(
+                            'Error',
+                            'No se puede eliminar el rol asociado a un usuario',
+                            'error'
+                        );
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    Swal.fire(
+                        'Error',
+                        'Ocurrió un error al eliminar el rol',
+                        'error'
+                    );
+                });
         }
-    })
-}
+    });
+};
 
 const editar = (id) => {
     fetch(`https://localhost:7214/api/Role/${id}`)
@@ -125,4 +205,5 @@ const editar = (id) => {
             }
         })
 }
+
 cargarRol()

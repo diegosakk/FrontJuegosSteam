@@ -1,4 +1,3 @@
-
 const cargarJuegos = () => {
     fetch('https://localhost:7214/api/juego')
         .then(response => response.json())
@@ -71,7 +70,7 @@ const modificar = () => {
         Precio: document.getElementById('precio').value.trim(),
         Usuario_registrado: document.getElementById('usuario').value.trim(),
 
-       
+
     }
 
     fetch('https://localhost:7214/api/juego/' + document.getElementById('id').value, {
@@ -142,87 +141,12 @@ const editar = (id) => {
                 document.getElementById('precio').value = juego.data.precio
                 document.getElementById('usuario').value = juego.data.usuario_registrado
 
-                
+
 
                 const modalSave = new bootstrap.Modal(document.getElementById('modalSave'))
                 modalSave.show()
             }
         })
 }
-const cargarSelects = () => {
-    // Cargar opciones para el campo "Desarrollador"
-    fetch('https://localhost:7214/api/desarrollador')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const desarrolladorSelect = document.getElementById('desarrollador');
-                desarrolladorSelect.innerHTML = ''; // Limpiar opciones existentes
 
-                // Agregar una opción por cada desarrollador
-                data.data.forEach(desarrollador => {
-                    const option = document.createElement('option');
-                    option.value = desarrollador.id;
-                    option.textContent = desarrollador.nombre;
-                    desarrolladorSelect.appendChild(option);
-                });
-            }
-        });
-
-    // Cargar opciones para el campo "Editor"
-    fetch('https://localhost:7214/api/editor')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const editorSelect = document.getElementById('editor');
-                editorSelect.innerHTML = ''; // Limpiar opciones existentes
-
-                // Agregar una opción por cada editor
-                data.data.forEach(editor => {
-                    const option = document.createElement('option');
-                    option.value = editor.id;
-                    option.textContent = editor.nombre;
-                    editorSelect.appendChild(option);
-                });
-            }
-        });
-
-    // Cargar opciones para el campo "Usuario"
-    fetch('https://localhost:7214/api/usuario')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const usuarioSelect = document.getElementById('usuario');
-                usuarioSelect.innerHTML = ''; // Limpiar opciones existentes
-
-                // Agregar una opción por cada usuario
-                data.data.forEach(usuario => {
-                    const option = document.createElement('option');
-                    option.value = usuario.id;
-                    option.textContent = usuario.nombre;
-                    usuarioSelect.appendChild(option);
-                });
-            }
-        });
-
-    // Cargar opciones para el campo "Categoría"
-    fetch('https://localhost:7214/api/categoria')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const categoriaSelect = document.getElementById('categoria');
-                categoriaSelect.innerHTML = ''; // Limpiar opciones existentes
-
-                // Agregar una opción por cada categoría
-                data.data.forEach(categoria => {
-                    const option = document.createElement('option');
-                    option.value = categoria.id;
-                    option.textContent = categoria.nombre;
-                    categoriaSelect.appendChild(option);
-                });
-            }
-        });
-};
-
-// Llamar a la función para cargar los selects al cargar la página
-cargarSelects();
 cargarSucursal();

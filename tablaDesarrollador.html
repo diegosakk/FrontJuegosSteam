@@ -80,17 +80,17 @@
       <form id="formdesa">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="name">Crear Juego</h1>
+            <h1 class="modal-title fs-5" id="name">Crear Desarrollador</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
               onclick="limpiar()"></button>
           </div>
           <div class="modal-body">
             <input type="hidden" id="id" class="form-control">
             <div class="mb-3">
-              <input type="text" class="form-control " placeholder="Ingresa Nombre" id="nombre">
+              <input type="text" class="form-control " placeholder="Ingresa Nombre" id="nombre" required maxlength="50">
             </div>
             <div class="mb-3">
-              <input type="text" class="form-control" placeholder="Ingresa Pais" id="pais">
+              <input type="text" class="form-control" placeholder="Ingresa Pais" id="pais" required maxlength="50">
             </div>
           </div>
           <div class="modal-footer">

@@ -1,20 +1,19 @@
-
 const cargarCategoria = () => {
     fetch('https://localhost:7214/api/Categoria')
         .then(response => response.json())
         .then(categoria => {
             if (categoria.success) {
                 let tabla = ''
-                categoria.data.forEach(s => {
+                categoria.data.forEach(c => {
                     tabla += `
                         <tr>
-                            <td>${s.nombre}</td>
-                            <td>${s.descripcion}</td>
-                        <td nowrap>
-                                <button class="btn btn-warning text-white" onclick="editar(${s.id})">
+                            <td>${c.nombre}</td>
+                            <td>${c.descripcion}</td>
+                         <td nowrap>
+                                <button class="btn btn-warning text-white" onclick="editar(${c.id})">
                                     Editar
                                 </button>
-                                <button class="btn btn-danger" onclick="eliminar(${s.id})">
+                                <button class="btn btn-danger" onclick="eliminar(${c.id})">
                                     Eliminar
                                 </button>
                             </td>
@@ -29,11 +28,25 @@ const cargarCategoria = () => {
         })
 }
 const crear = () => {
-    const categoria = {
-        Nombre: document.getElementById('nombre').value.trim(),
-        Descripcion: document.getElementById('descripcion').value.trim(),
+    const nombre = document.getElementById('nombre').value.trim();
+    const descripcion = document.getElementById('descripcion').value.trim();
 
+    // Validar campos requeridos
+    if (!nombre || !descripcion) {
+        Swal.fire({
+            title: 'Campos requeridos',
+            text: 'Por favor completa todos los campos',
+            icon: 'error',
+
+        });
+        return; // Detener la ejecución si hay campos requeridos vacíos
     }
+
+    const categoria = {
+        nombre: nombre,
+        descripcion: descripcion,
+    }
+
 
     fetch('https://localhost:7214/api/Categoria', {
         method: 'post',
@@ -42,34 +55,82 @@ const crear = () => {
         },
         body: JSON.stringify(categoria)
     }).then(response => {
-        console.log(response.json())
-
-        cargarCategoria()
-        var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
-        myModal.hide();
-        limpiar()
-    })
+        if (response.ok) {
+            cargarCategoria();
+            var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
+            myModal.hide();
+            limpiar();
+            Swal.fire({
+                title: 'Guardado',
+                text: 'La categoria ha sido guardado con éxito',
+                icon: 'success',
+            });
+        } else {
+            response.json().then(data => {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message,
+                    icon: 'error',
+                });
+            });
+        }
+    }).catch(error => {
+        // Manejar errores de red u otros errores
+        console.error('Error en la solicitud de guardar el la categoria:', error);
+    });
 }
+
+
 const modificar = () => {
+    const id = document.getElementById('id').value;
+    const nombre = document.getElementById('nombre').value.trim();
+    const descripcion = document.getElementById('descripcion').value.trim();
+
+    if (!nombre || !descripcion) {
+        Swal.fire({
+            title: 'Campos requeridos',
+            text: 'Por favor completa todos los campos',
+            icon: 'error',
+
+        });
+        return; // Detener la ejecución si hay campos requeridos vacíos
+    }
     const categoria = {
-        Id: document.getElementById('id').value,
-        Nombre: document.getElementById('nombre').value.trim(),
-        Descripcion: document.getElementById('descripcion').value.trim(),
+        Id: id,
+        Nombre: nombre,
+        Descripcion: descripcion,
     }
 
-    fetch('https://localhost:7214/api/Categoria/' + document.getElementById('id').value, {
-        method: 'put',
+    fetch('https://localhost:7214/api/Categoria/' + id, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(categoria)
     }).then(response => {
-        cargarCategoria()
-        const myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
-        myModal.hide();
-        limpiar()
-    })
-
+        if (response.ok) {
+            cargarCategoria();
+            const myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
+            myModal.hide();
+            limpiar();
+            Swal.fire({
+                title: 'Modificado',
+                text: 'La categoria ha sido modificado con éxito',
+                icon: 'success',
+            });
+        } else {
+            response.json().then(data => {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message,
+                    icon: 'error',
+                });
+            });
+        }
+    }).catch(error => {
+        // Manejar errores de red u otros errores
+        console.error('Error en la solicitud de editar la categoria:', error);
+    });
 }
 const guardar = () => {
     if (document.getElementById('id').value == '')
@@ -80,14 +141,17 @@ const guardar = () => {
 const limpiar = () => {
     document.querySelectorAll('.form-control').forEach(e => {
         e.value = ''
+        e.parentElement.classList.remove('is-valid');
     })
+    const formcat = document.getElementById('formcat');
+    formcat.reset();
 }
 
 const eliminar = (id) => {
-    //levanta sweetalert que indica si se quiere eliminar
+    // Levanta SweetAlert que indica si se quiere eliminar
     Swal.fire({
-        title: '¿Estás seguro de eliminar el categoria?',
-        text: 'No podrás recuperarla después de eliminarla',
+        title: '¿Estás seguro de eliminar la categoria?',
+        text: 'No podrás recuperarlo después de eliminarlo',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -95,21 +159,37 @@ const eliminar = (id) => {
         confirmButtonText: 'Eliminar',
     }).then((result) => {
         if (result.isConfirmed) {
-            //consumir api eliminar
+            // Consumir API para eliminar
             fetch(`https://localhost:7214/api/Categoria/${id}`, {
-                method: 'delete'
-            }).then(response => {
-                Swal.fire(
-                    'Eliminado',
-                    'El categoria ha sido eliminado con éxito',
-                    'success'
-                )
-                cargarCategoria()
+                method: 'delete',
             })
-
+                .then((response) => {
+                    if (response.ok) {
+                        Swal.fire(
+                            'Eliminado',
+                            'La categoria ha sido eliminado con éxito',
+                            'success'
+                        );
+                        cargarCategoria();
+                    } else {
+                        Swal.fire(
+                            'Error',
+                            'No se puede eliminar la categoria asociado a un juego',
+                            'error'
+                        );
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    Swal.fire(
+                        'Error',
+                        'Ocurrió un error al eliminar la categoria',
+                        'error'
+                    );
+                });
         }
-    })
-}
+    });
+};
 
 const editar = (id) => {
     fetch(`https://localhost:7214/api/Categoria/${id}`)
@@ -125,4 +205,5 @@ const editar = (id) => {
             }
         })
 }
+
 cargarCategoria()

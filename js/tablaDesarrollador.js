@@ -29,10 +29,23 @@ const cargarDesarrollador = () => {
         })
 }
 const crear = () => {
-    const desarrollador = {
-        Nombre: document.getElementById('nombre').value.trim(),
-        Pais: document.getElementById('pais').value.trim(),
+    const nombre = document.getElementById('nombre').value.trim();
+    const pais = document.getElementById('pais').value.trim();
 
+    // Validar campos requeridos
+    if (!nombre || !pais) {
+        Swal.fire({
+            title: 'Campos requeridos',
+            text: 'Por favor completa todos los campos',
+            icon: 'error',
+
+        });
+        return; // Detener la ejecución si hay campos requeridos vacíos
+    }
+
+    const desarrollador = {
+        Nombre: nombre,
+        Pais: pais,
     }
 
     fetch('https://localhost:7214/api/Desarrollador', {
@@ -42,45 +55,97 @@ const crear = () => {
         },
         body: JSON.stringify(desarrollador)
     }).then(response => {
-        console.log(response.json())
-
-        cargarDesarrollador()
-        var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('saveModal'));
-        myModal.hide();
-        limpiar()
-    })
+        if (response.ok) {
+            cargarDesarrollador();
+            var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
+            myModal.hide();
+            limpiar();
+            Swal.fire({
+                title: 'Guardado',
+                text: 'El desarrollador ha sido guardado con éxito',
+                icon: 'success',
+            });
+        } else {
+            response.json().then(data => {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message,
+                    icon: 'error',
+                });
+            });
+        }
+    }).catch(error => {
+        // Manejar errores de red u otros errores
+        console.error('Error en la solicitud de guardar el desarrollador:', error);
+    });
 }
 const modificar = () => {
-    const desarrollador = {
-        Id: document.getElementById('id').value,
-        Nombre: document.getElementById('nombre').value.trim(),
-        Pais: document.getElementById('pais').value.trim(),
+    const id = document.getElementById('id').value.trim();
+    const nombre = document.getElementById('nombre').value.trim();
+    const pais = document.getElementById('pais').value.trim();
+
+    // Validar campos requeridos
+    if (!nombre || !pais) {
+        Swal.fire({
+            title: 'Campos requeridos',
+            text: 'Por favor completa todos los campos',
+            icon: 'error',
+        });
+        return; // Detener la ejecución si hay campos requeridos vacíos
     }
 
-    fetch('https://localhost:7214/api/Desarrollador/' + document.getElementById('id').value, {
-        method: 'put',
+    const desarrollador = {
+        Id: id,
+        Nombre: nombre,
+        Pais: pais,
+    }
+
+    fetch('https://localhost:7214/api/Desarrollador/' + id, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(desarrollador)
     }).then(response => {
-        cargarDesarrollador()
-        const myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
-        myModal.hide();
-        limpiar()
-    })
-
+        if (response.ok) {
+            cargarDesarrollador();
+            const myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
+            myModal.hide();
+            limpiar();
+            Swal.fire({
+                title: 'Modificado',
+                text: 'El desarrollador ha sido modificado con éxito',
+                icon: 'success',
+            });
+        } else {
+            // Manejar errores de respuesta aquí
+            throw new Error('Error al modificar el desarrollador');
+        }
+    }).catch(error => {
+        // Manejar errores de red u otros errores
+        console.error('Error en la solicitud de modificar el desarrollador:', error);
+    });
 }
 const guardar = () => {
-    if (document.getElementById('id').value == '')
-        crear()
-    else
-        modificar()
+    if (document.getElementById('id').value == '') {
+
+        crear();
+    }
+    else {
+        modificar();
+    }
+
 }
 const limpiar = () => {
+
     document.querySelectorAll('.form-control').forEach(e => {
         e.value = ''
+        e.parentElement.classList.remove('is-valid');
+
+
     })
+    const formDesa = document.getElementById('formdesa');
+    formDesa.reset();
 }
 
 const eliminar = (id) => {

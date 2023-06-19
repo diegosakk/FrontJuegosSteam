@@ -1,101 +1,110 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-        crossorigin="anonymous"></script>
-    <title>Bootstrap demo</title>
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand espacio" href="#">Vapor</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+    crossorigin="anonymous"></script>
+  <title>Bootstrap demo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand espacio" href="#">Vapor</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="pagina.html">Inicio</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="tablaJuegos.html">Libreria</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="tablaDesarrollador.html">Desarrolladores</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="tablaCategoria.html">Categorias</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="tablaEditor.html">Editores</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="tablaUsuario.html">Usuarios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="tablaRol.html">Roles</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="text-end mt-3">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSave">
+        Nuevo Desarrollador
+
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="pagina.html">Inicio</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="tablaJuegos.html">Libreria</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="tablaDesarrollador.html">Desarrolladores</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="tablaCategoria.html">Categorias</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="tablaEditor.html">Editores</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="tablaUsuario.html">Usuarios</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="tablaRol.html">Roles</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
-    <div class="container">
-        <div class="text-end mt-3">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSave">
-                Nuevo Juego
-            </button>
-        </div>
-        <div class="table-responsive p-3" id="tablaJuegos">
-            <table class="table table-bordered">
-                <thead class="bg-dark text-white">
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Pais</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="listarDatos">
-
-                </tbody>
-            </table>
-        </div>
     </div>
+    <div class="table-responsive p-3" id="tablaDesarrollador">
+      <table class="table table-bordered">
+        <thead class="bg-dark text-white">
+          <tr>
+            <th class="text-center">Nombre</th>
+            <th class="text-center">Pais</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="text-center" id="listarDatos">
+
+        </tbody>
+      </table>
+    </div>
+  </div>
 
 
-    <!-- Modal -->
-    <div class="modal fade" id="modalSave" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="name">Crear Juego</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="id" class="form-control">
-                    <div class="mb-3">
-                        <input type="text" class="form-control" placeholder="Ingresa Nombre" id="nombre">
-                    </div>
-                    <div class="mb-3">
-                        <input type="text" class="form-control" placeholder="Ingresa Pais" id="pais">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" id="btnSave" onclick="guardar()" class="btn btn-primary">Guardar</button>
-                </div>
+  <!-- Modal -->
+  <div class="modal fade" id="modalSave" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    data-bs-backdrop="static">
+    <div class="modal-dialog">
+      <form id="formdesa">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="name">Crear Juego</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+              onclick="limpiar()"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="id" class="form-control">
+            <div class="mb-3">
+              <input type="text" class="form-control " placeholder="Ingresa Nombre" id="nombre">
             </div>
+            <div class="mb-3">
+              <input type="text" class="form-control" placeholder="Ingresa Pais" id="pais">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="limpiar()">Cerrar</button>
+
+            <button type="button" id="btnSave" onclick="guardar()" class="btn btn-primary">Guardar</button>
+          </div>
         </div>
+      </form>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="js/tablaDesarrollador.js"></script>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="js/tablaDesarrollador.js"></script>
 </body>
-  </body>
+</body>
+
 </html>

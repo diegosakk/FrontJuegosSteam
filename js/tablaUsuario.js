@@ -1,6 +1,6 @@
 
 const cargarUsuarios = () => {
-    fetch('https://localhost:7214/api/Usuario')
+    fetch('https://localhost:7214/api/usuario')
         .then(response => response.json())
         .then(usuario => {
             if (usuario.success) {
@@ -12,7 +12,7 @@ const cargarUsuarios = () => {
                             <td>${s.rut}</td>
                             <td>${s.correo}</td>
                             <td>${s.telefono}</td>
-                            <td>${s.permisoss}</td>
+                            <td>${s.roles}</td>
                             <td nowrap>
                                 <button class="btn btn-warning text-white" onclick="editar(${s.id})">
                                     Editar
@@ -34,10 +34,11 @@ const cargarUsuarios = () => {
 const crear = () => {
     const usuario = {
         Nombre: document.getElementById('nombre').value.trim(),
-        RUT: document.getElementById('rut').value.trim(),
+        Rut: document.getElementById('rut').value.trim(),
         Correo: document.getElementById('correo').value.trim(),
         Telefono: document.getElementById('telefono').value.trim(),
         Roles: document.getElementById('roles').value.trim(),
+
     }
 
     fetch('https://localhost:7214/api/Usuario', {
@@ -49,8 +50,8 @@ const crear = () => {
     }).then(response => {
         console.log(response.json())
 
-        cargarusuario()
-        var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('saveModal'));
+        cargarUsuarios()
+        var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
         myModal.hide();
         limpiar()
     })
@@ -59,13 +60,13 @@ const modificar = () => {
     const usuario = {
         Id: document.getElementById('id').value,
         Nombre: document.getElementById('nombre').value.trim(),
-        RUT: document.getElementById('rut').value.trim(),
+        Rut: document.getElementById('rut').value.trim(),
         Correo: document.getElementById('correo').value.trim(),
         Telefono: document.getElementById('telefono').value.trim(),
         Roles: document.getElementById('roles').value.trim(),
     }
 
-    fetch('hhttps://localhost:7214/api/Usuario/' + document.getElementById('id').value, {
+    fetch('https://localhost:7214/api/Usuario/' + document.getElementById('id').value, {
         method: 'put',
         headers: {
             'Content-Type': 'application/json'
@@ -112,7 +113,7 @@ const eliminar = (id) => {
                     'La usuario ha sido eliminado con éxito',
                     'success'
                 )
-                cargarusuario()
+                cargarUsuarios()
             })
 
         }
@@ -136,4 +137,26 @@ const editar = (id) => {
             }
         })
 }
-cargarUsuarios()
+const cargarSelects = () => {
+    // Cargar opciones para el campo "Roles"
+    fetch('https://localhost:7214/api/role')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const rolesSelect = document.getElementById('roles');
+                rolesSelect.innerHTML = ''; // Limpiar opciones existentes
+
+                // Agregar una opción por cada rol
+                data.data.forEach(rol => { // Cambio de "roles" a "rol" en esta línea
+                    const option = document.createElement('option');
+                    option.value = rol.id; // Cambio de "roles.id" a "rol.id" en esta línea
+                    option.textContent = rol.nombre; // Cambio de "roles.nombre" a "rol.nombre" en esta línea
+                    rolesSelect.appendChild(option);
+                });
+            }
+        });
+};
+
+// Llamar a la función para cargar los selects al cargar la página
+cargarSelects();
+cargarUsuarios();

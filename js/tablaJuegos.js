@@ -1,6 +1,6 @@
 
 const cargarJuegos = () => {
-    fetch('https://localhost:7247/api/sucursal')
+    fetch('https://localhost:7214/api/juego')
         .then(response => response.json())
         .then(juegos => {
             if (juegos.success) {
@@ -8,11 +8,13 @@ const cargarJuegos = () => {
                 juegos.data.forEach(s => {
                     tabla += `
                         <tr>
-                            <td>${s.ciudad}</td>
-                            <td>${s.dirección}</td>
-                            <td>${s.encargado}</td>
-                            <td>${s.fono}</td>
-                            <td>${s.email}</td>
+                            <td>${s.nombre}</td>
+                            <td>${s.categoria}</td>
+                            <td>${s.desarrollador}</td>
+                            <td>${s.editor}</td>
+                            <td>${s.plataforma}</td>
+                            <td>${s.precio}</td>
+                            <td>${s.usuario_registrado}</td>
                             <td nowrap>
                                 <button class="btn btn-warning text-white" onclick="editar(${s.id})">
                                     Editar
@@ -32,47 +34,54 @@ const cargarJuegos = () => {
         })
 }
 const crear = () => {
-    const sucursal = {
-        Ciudad: document.getElementById('ciudad').value.trim(),
-        Dirección: document.getElementById('direccion').value.trim(),
-        Fono: document.getElementById('fono').value.trim(),
-        Email: document.getElementById('email').value.trim(),
-        Encargado: document.getElementById('encargado').value.trim(),
+    const juego = {
+        Nombre: document.getElementById('nombre').value.trim(),
+        Categoria: document.getElementById('categoria').value.trim(),
+        Desarrollador: document.getElementById('desarrollador').value.trim(),
+        Editor: document.getElementById('editor').value.trim(),
+        Plataforma: document.getElementById('plataforma').value.trim(),
+        Precio: document.getElementById('precio').value.trim(),
+        Usuario_registrado: document.getElementById('usuario').value.trim(),
+
     }
 
-    fetch('https://localhost:7247/api/sucursal', {
+    fetch('https://localhost:7214/api/juego', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(sucursal)
+        body: JSON.stringify(juego)
     }).then(response => {
         console.log(response.json())
 
-        cargarSucursal()
-        var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('saveModal'));
+        cargarJuegos()
+        var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
         myModal.hide();
         limpiar()
     })
 }
 const modificar = () => {
-    const sucursal = {
+    const juego = {
         Id: document.getElementById('id').value,
-        Ciudad: document.getElementById('ciudad').value.trim(),
-        Dirección: document.getElementById('direccion').value.trim(),
-        Fono: document.getElementById('fono').value.trim(),
-        Email: document.getElementById('email').value.trim(),
-        Encargado: document.getElementById('encargado').value.trim(),
+        Nombre: document.getElementById('nombre').value.trim(),
+        Categoria: document.getElementById('categoria').value.trim(),
+        Desarrollador: document.getElementById('desarrollador').value.trim(),
+        Editor: document.getElementById('editor').value.trim(),
+        Plataforma: document.getElementById('plataforma').value.trim(),
+        Precio: document.getElementById('precio').value.trim(),
+        Usuario_registrado: document.getElementById('usuario').value.trim(),
+
+       
     }
 
-    fetch('https://localhost:7247/api/sucursal/' + document.getElementById('id').value, {
+    fetch('https://localhost:7214/api/juego/' + document.getElementById('id').value, {
         method: 'put',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(sucursal)
+        body: JSON.stringify(juego)
     }).then(response => {
-        cargarSucursal()
+        cargarJuegos()
         const myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
         myModal.hide();
         limpiar()
@@ -94,7 +103,7 @@ const limpiar = () => {
 const eliminar = (id) => {
     //levanta sweetalert que indica si se quiere eliminar
     Swal.fire({
-        title: '¿Estás seguro de eliminar la sucursal?',
+        title: '¿Estás seguro de eliminar la el juego?',
         text: 'No podrás recuperarla después de eliminarla',
         icon: 'warning',
         showCancelButton: true,
@@ -104,7 +113,7 @@ const eliminar = (id) => {
     }).then((result) => {
         if (result.isConfirmed) {
             //consumir api eliminar
-            fetch(`https://localhost:7247/api/sucursal/${id}`, {
+            fetch(`https://localhost:7214/api/sucursal/${id}`, {
                 method: 'delete'
             }).then(response => {
                 Swal.fire(
@@ -120,20 +129,100 @@ const eliminar = (id) => {
 }
 
 const editar = (id) => {
-    fetch(`https://localhost:7247/api/sucursal/${id}`)
+    fetch(`https://localhost:7214/api/juego/${id}`)
         .then(response => response.json())
-        .then(sucursal => {
-            if (sucursal.success) {
-                document.getElementById('id').value = sucursal.data.id
-                document.getElementById('ciudad').value = sucursal.data.ciudad
-                document.getElementById('direccion').value = sucursal.data.dirección
-                document.getElementById('fono').value = sucursal.data.fono
-                document.getElementById('email').value = sucursal.data.email
-                document.getElementById('encargado').value = sucursal.data.encargado
+        .then(juego => {
+            if (juego.success) {
+                document.getElementById('id').value = juego.data.id
+                document.getElementById('nombre').value = juego.data.nombre
+                document.getElementById('categoria').value = juego.data.categoria
+                document.getElementById('desarrollador').value = juego.data.desarrollador
+                document.getElementById('editor').value = juego.data.editor
+                document.getElementById('plataforma').value = juego.data.plataforma
+                document.getElementById('precio').value = juego.data.precio
+                document.getElementById('usuario').value = juego.data.usuario_registrado
+
+                
 
                 const modalSave = new bootstrap.Modal(document.getElementById('modalSave'))
                 modalSave.show()
             }
         })
 }
-cargarSucursal()
+const cargarSelects = () => {
+    // Cargar opciones para el campo "Desarrollador"
+    fetch('https://localhost:7214/api/desarrollador')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const desarrolladorSelect = document.getElementById('desarrollador');
+                desarrolladorSelect.innerHTML = ''; // Limpiar opciones existentes
+
+                // Agregar una opción por cada desarrollador
+                data.data.forEach(desarrollador => {
+                    const option = document.createElement('option');
+                    option.value = desarrollador.id;
+                    option.textContent = desarrollador.nombre;
+                    desarrolladorSelect.appendChild(option);
+                });
+            }
+        });
+
+    // Cargar opciones para el campo "Editor"
+    fetch('https://localhost:7214/api/editor')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const editorSelect = document.getElementById('editor');
+                editorSelect.innerHTML = ''; // Limpiar opciones existentes
+
+                // Agregar una opción por cada editor
+                data.data.forEach(editor => {
+                    const option = document.createElement('option');
+                    option.value = editor.id;
+                    option.textContent = editor.nombre;
+                    editorSelect.appendChild(option);
+                });
+            }
+        });
+
+    // Cargar opciones para el campo "Usuario"
+    fetch('https://localhost:7214/api/usuario')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const usuarioSelect = document.getElementById('usuario');
+                usuarioSelect.innerHTML = ''; // Limpiar opciones existentes
+
+                // Agregar una opción por cada usuario
+                data.data.forEach(usuario => {
+                    const option = document.createElement('option');
+                    option.value = usuario.id;
+                    option.textContent = usuario.nombre;
+                    usuarioSelect.appendChild(option);
+                });
+            }
+        });
+
+    // Cargar opciones para el campo "Categoría"
+    fetch('https://localhost:7214/api/categoria')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const categoriaSelect = document.getElementById('categoria');
+                categoriaSelect.innerHTML = ''; // Limpiar opciones existentes
+
+                // Agregar una opción por cada categoría
+                data.data.forEach(categoria => {
+                    const option = document.createElement('option');
+                    option.value = categoria.id;
+                    option.textContent = categoria.nombre;
+                    categoriaSelect.appendChild(option);
+                });
+            }
+        });
+};
+
+// Llamar a la función para cargar los selects al cargar la página
+cargarSelects();
+cargarSucursal();

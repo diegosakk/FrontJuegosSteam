@@ -45,7 +45,7 @@ const crear = () => {
         console.log(response.json())
 
         cargarCategoria()
-        var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('saveModal'));
+        var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
         myModal.hide();
         limpiar()
     })

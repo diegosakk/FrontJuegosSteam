@@ -356,7 +356,16 @@ const editar = (id) => {
 }
 
 
+const precioInput = document.getElementById('precio');
 
+precioInput.addEventListener('input', () => {
+    const precioValue = precioInput.value.trim();
+    const precioRegex = /^[0-9]+$/;
+
+    if (!precioRegex.test(precioValue)) {
+        precioInput.value = '';
+    }
+});
 
 
 

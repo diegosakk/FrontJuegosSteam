@@ -81,6 +81,7 @@ const cargarJuegos = async () => {
             fetch('https://localhost:7214/api/Categoria')
                     .then(response => response.json())
                     .then(categoria => {
+
                         if (categoria.success) {
                             let options = '<option value="">Selecciona una categoria</option>';
                             categoria.data.forEach(categoria => {

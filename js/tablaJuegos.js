@@ -1,33 +1,84 @@
-const cargarJuegos = () => {
-    fetch('https://localhost:7214/api/Juego')
-        .then(response => response.json())
-        .then(juegos => {
-            if (juegos.success) {
-                let tabla = ''
-                juegos.data.forEach(s => {
-                    tabla += `
-                        <tr>
-                            <td>${s.nombre}</td>
-                            <td>${s.categoria}</td>
-                            <td>${s.desarrollador}</td>
-                            <td>${s.editor}</td>
-                            <td>${s.precio}</td>
-                            <td>${s.usuarioRegistrado}</td>
-                            <td>${s.plataforma}</td>
-                            <td nowrap>
-                                <button class="btn btn-warning text-white" onclick="editar(${s.id})">
-                                    Editar
-                                </button>
-                                <button class="btn btn-danger" onclick="eliminar(${s.id})">
-                                    Eliminar
-                                </button>
-                            </td>
-                        <tr>
-                    `
-                })
-                document.getElementById('listarDatos').innerHTML = tabla
-                // Obtener los roles y agregarlos al select
-                fetch('https://localhost:7214/api/Categoria')
+const cargarJuegos = async () => {
+    try {
+        const responseJuegos = await fetch('https://localhost:7214/api/Juego');
+        const juegos = await responseJuegos.json();
+        
+        if (juegos.success) {
+            let tabla = '';
+            
+            for (const juego of juegos.data) {
+                let nombreEditor = '';
+                let nombreDesarrollador = '';
+                let nombreCategoria = '';
+                let nombreUsuario = '';
+                
+                try {
+                    const responseEditor = await fetch(`https://localhost:7214/api/Editor/${juego.editor}`);
+                    const editor = await responseEditor.json();
+                    
+                    if (editor.success) {
+                        nombreEditor = editor.data.nombre;
+                    }
+                } catch (error) {
+                    console.error('Error en la solicitud de obtener el editor:', error);
+                }
+                
+                try {
+                    const responseDesarrollador = await fetch(`https://localhost:7214/api/Desarrollador/${juego.desarrollador}`);
+                    const desarrollador = await responseDesarrollador.json();
+                    
+                    if (desarrollador.success) {
+                        nombreDesarrollador = desarrollador.data.nombre;
+                    }
+                } catch (error) {
+                    console.error('Error en la solicitud de obtener el desarrollador:', error);
+                }
+                
+                try {
+                    const responseCategoria = await fetch(`https://localhost:7214/api/Categoria/${juego.categoria}`);
+                    const categoria = await responseCategoria.json();
+                    
+                    if (categoria.success) {
+                        nombreCategoria = categoria.data.nombre;
+                    }
+                } catch (error) {
+                    console.error('Error en la solicitud de obtener la categoría:', error);
+                }
+                
+                try {
+                    const responseUsuario = await fetch(`https://localhost:7214/api/Usuario/${juego.usuarioRegistrado}`);
+                    const usuario = await responseUsuario.json();
+                    
+                    if (usuario.success) {
+                        nombreUsuario = usuario.data.nombre;
+                    }
+                } catch (error) {
+                    console.error('Error en la solicitud de obtener el usuario:', error);
+                }
+                
+                tabla += `
+                    <tr>
+                        <td>${juego.nombre}</td>
+                        <td>${nombreDesarrollador}</td>
+                        <td>${nombreEditor}</td>
+                        <td>${nombreUsuario}</td>
+                        <td>${nombreCategoria}</td>
+                        <td>${juego.precio}</td>
+                        <td>${juego.plataforma}</td>
+                        <td nowrap>
+                            <button class="btn btn-warning text-white" onclick="editar(${juego.id})">
+                                Editar
+                            </button>
+                            <button class="btn btn-danger" onclick="eliminar(${juego.id})">
+                                Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            document.getElementById('listarDatos').innerHTML = tabla;
+            fetch('https://localhost:7214/api/Categoria')
                     .then(response => response.json())
                     .then(categoria => {
                         if (categoria.success) {
@@ -94,11 +145,16 @@ const cargarJuegos = () => {
                     .catch(error => {
                         console.error('Error en la solicitud de obtener las usuario:', error);
                     });
-            } else {
-                document.getElementById('tablita').hidden = false;
-            }
-        });
+            
+            // Resto del código...
+        } else {
+            document.getElementById('tablita').hidden = false;
+        }
+    } catch (error) {
+        console.error('Error en la solicitud de obtener los juegos:', error);
+    }
 };
+
 
 const crear = () => {
 
@@ -108,10 +164,10 @@ const crear = () => {
     const editor = document.getElementById('editor').value.trim();
     const plataforma = document.getElementById('plataforma').value.trim();
     const precio = document.getElementById('precio').value.trim();
-    const usuario_registrado = document.getElementById('usuario').value.trim();
+    const usuarioregistrado = document.getElementById('usuario').value.trim();
 
 
-    if (nombre == '' || categoria == '' || desarrollador == '' || editor == '' || plataforma == '' || precio == '' || usuario_registrado == '') {
+    if (nombre == '' || categoria == '' || desarrollador == '' || editor == '' || plataforma == '' || precio == '' || usuarioregistrado == '') {
         Swal.fire({
             title: 'Campos requeridos',
             text: 'Por favor completa todos los campos',
@@ -129,7 +185,7 @@ const crear = () => {
         editor: editor,
         plataforma: plataforma,
         precio: precio,
-        usuarioregistrado: usuario_registrado,
+        usuarioregistrado: usuarioregistrado,
 
     };
 
@@ -173,10 +229,10 @@ const modificar = () => {
     const editor = document.getElementById('editor').value.trim();
     const plataforma = document.getElementById('plataforma').value.trim();
     const precio = document.getElementById('precio').value.trim();
-    const usuario_registrado = document.getElementById('usuario').value.trim();
+    const usuarioregistrado = document.getElementById('usuario').value.trim();
 
 
-    if (nombre == '' || categoria == '' || desarrollador == '' || editor == '' || plataforma == '' || precio == '' || usuario_registrado == '') {
+    if (nombre == '' || categoria == '' || desarrollador == '' || editor == '' || plataforma == '' || precio == '' || usuarioregistrado == '') {
         Swal.fire({
             title: 'Campos requeridos',
             text: 'Por favor completa todos los campos',
@@ -192,7 +248,7 @@ const modificar = () => {
         editor: editor,
         plataforma: plataforma,
         precio: precio,
-        usuarioregistrado: usuario_registrado,
+        usuarioregistrado: usuarioregistrado,
 
     };
 
@@ -286,7 +342,7 @@ const editar = (id) => {
                 document.getElementById('editor').value = juego.data.editor
                 document.getElementById('plataforma').value = juego.data.plataforma
                 document.getElementById('precio').value = juego.data.precio
-                document.getElementById('usuario').value = juego.data.usuario_registrado
+                document.getElementById('usuario').value = juego.data.usuarioRegistrado
 
 
 

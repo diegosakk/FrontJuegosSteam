@@ -11,9 +11,9 @@ const cargarJuegos = () => {
                             <td>${s.categoria}</td>
                             <td>${s.desarrollador}</td>
                             <td>${s.editor}</td>
-                            <td>${s.plataforma}</td>
                             <td>${s.precio}</td>
-                            <td>${s.usuario_registrado}</td>
+                            <td>${s.usuarioRegistrado}</td>
+                            <td>${s.plataforma}</td>
                             <td nowrap>
                                 <button class="btn btn-warning text-white" onclick="editar(${s.id})">
                                     Editar
@@ -121,6 +121,7 @@ const crear = () => {
     }
 
 
+
     const juego = {
         nombre: nombre,
         categoria: categoria,
@@ -129,9 +130,10 @@ const crear = () => {
         plataforma: plataforma,
         precio: precio,
         usuarioregistrado: usuario_registrado,
+
     };
-console.log(juego)
-    fetch('https://localhost:7214/api/juego', {
+
+    fetch('https://localhost:7214/api/Juego', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json'
@@ -190,7 +192,7 @@ const modificar = () => {
         editor: editor,
         plataforma: plataforma,
         precio: precio,
-        usuario_registrado: usuario_registrado,
+        usuarioregistrado: usuario_registrado,
 
     };
 

@@ -2,60 +2,60 @@ const cargarJuegos = async () => {
     try {
         const responseJuegos = await fetch('https://localhost:7214/api/Juego');
         const juegos = await responseJuegos.json();
-        
+
         if (juegos.success) {
             let tabla = '';
-            
+
             for (const juego of juegos.data) {
                 let nombreEditor = '';
                 let nombreDesarrollador = '';
                 let nombreCategoria = '';
                 let nombreUsuario = '';
-                
+
                 try {
                     const responseEditor = await fetch(`https://localhost:7214/api/Editor/${juego.editor}`);
                     const editor = await responseEditor.json();
-                    
+
                     if (editor.success) {
                         nombreEditor = editor.data.nombre;
                     }
                 } catch (error) {
                     console.error('Error en la solicitud de obtener el editor:', error);
                 }
-                
+
                 try {
                     const responseDesarrollador = await fetch(`https://localhost:7214/api/Desarrollador/${juego.desarrollador}`);
                     const desarrollador = await responseDesarrollador.json();
-                    
+
                     if (desarrollador.success) {
                         nombreDesarrollador = desarrollador.data.nombre;
                     }
                 } catch (error) {
                     console.error('Error en la solicitud de obtener el desarrollador:', error);
                 }
-                
+
                 try {
                     const responseCategoria = await fetch(`https://localhost:7214/api/Categoria/${juego.categoria}`);
                     const categoria = await responseCategoria.json();
-                    
+
                     if (categoria.success) {
                         nombreCategoria = categoria.data.nombre;
                     }
                 } catch (error) {
                     console.error('Error en la solicitud de obtener la categoría:', error);
                 }
-                
+
                 try {
                     const responseUsuario = await fetch(`https://localhost:7214/api/Usuario/${juego.usuarioRegistrado}`);
                     const usuario = await responseUsuario.json();
-                    
+
                     if (usuario.success) {
                         nombreUsuario = usuario.data.nombre;
                     }
                 } catch (error) {
                     console.error('Error en la solicitud de obtener el usuario:', error);
                 }
-                
+
                 tabla += `
                     <tr>
                         <td>${juego.nombre}</td>
@@ -76,77 +76,77 @@ const cargarJuegos = async () => {
                     </tr>
                 `;
             }
-            
+
             document.getElementById('listarDatos').innerHTML = tabla;
             fetch('https://localhost:7214/api/Categoria')
-                    .then(response => response.json())
-                    .then(categoria => {
+                .then(response => response.json())
+                .then(categoria => {
 
-                        if (categoria.success) {
-                            let options = '<option value="">Selecciona una categoria</option>';
-                            categoria.data.forEach(categoria => {
-                                options += `<option value="${categoria.id}">${categoria.nombre}</option>`;
-                            });
-                            document.getElementById('categoria').innerHTML = options;
-                        } else {
-                            console.error('Error al obtener las categorias:', categoria.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error en la solicitud de obtener las categorias:', error);
-                    });
-                // Obtener los roles y agregarlos al select
-                fetch('https://localhost:7214/api/Desarrollador')
-                    .then(response => response.json())
-                    .then(desarrollador => {
-                        if (desarrollador.success) {
-                            let options = '<option value="">Selecciona un desarrollador</option>';
-                            desarrollador.data.forEach(desarrollador => {
-                                options += `<option value="${desarrollador.id}">${desarrollador.nombre}</option>`;
-                            });
-                            document.getElementById('desarrollador').innerHTML = options;
-                        } else {
-                            console.error('Error al obtener los desarrolladores:', desarrollador.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error en la solicitud de obtener los desarrollladores:', error);
-                    });
-                // Obtener los roles y agregarlos al select
-                fetch('https://localhost:7214/api/Editor')
-                    .then(response => response.json())
-                    .then(editor => {
-                        if (editor.success) {
-                            let options = '<option value="">Selecciona un editor</option>';
-                            editor.data.forEach(editor => {
-                                options += `<option value="${editor.id}">${editor.nombre}</option>`;
-                            });
-                            document.getElementById('editor').innerHTML = options;
-                        } else {
-                            console.error('Error al obtener los editores:', editor.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error en la solicitud de obtener los editores:', error);
-                    });
-                // Obtener los roles y agregarlos al select
-                fetch('https://localhost:7214/api/Usuario')
-                    .then(response => response.json())
-                    .then(usuario => {
-                        if (usuario.success) {
-                            let options = '<option value="">Selecciona un usuario</option>';
-                            usuario.data.forEach(usuario => {
-                                options += `<option value="${usuario.id}">${usuario.nombre}</option>`;
-                            });
-                            document.getElementById('usuario').innerHTML = options;
-                        } else {
-                            console.error('Error al obtener los usuario:', usuario.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error en la solicitud de obtener las usuario:', error);
-                    });
-            
+                    if (categoria.success) {
+                        let options = '<option value="">Selecciona una categoria</option>';
+                        categoria.data.forEach(categoria => {
+                            options += `<option value="${categoria.id}">${categoria.nombre}</option>`;
+                        });
+                        document.getElementById('categoria').innerHTML = options;
+                    } else {
+                        console.error('Error al obtener las categorias:', categoria.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error en la solicitud de obtener las categorias:', error);
+                });
+            // Obtener los roles y agregarlos al select
+            fetch('https://localhost:7214/api/Desarrollador')
+                .then(response => response.json())
+                .then(desarrollador => {
+                    if (desarrollador.success) {
+                        let options = '<option value="">Selecciona un desarrollador</option>';
+                        desarrollador.data.forEach(desarrollador => {
+                            options += `<option value="${desarrollador.id}">${desarrollador.nombre}</option>`;
+                        });
+                        document.getElementById('desarrollador').innerHTML = options;
+                    } else {
+                        console.error('Error al obtener los desarrolladores:', desarrollador.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error en la solicitud de obtener los desarrollladores:', error);
+                });
+            // Obtener los roles y agregarlos al select
+            fetch('https://localhost:7214/api/Editor')
+                .then(response => response.json())
+                .then(editor => {
+                    if (editor.success) {
+                        let options = '<option value="">Selecciona un editor</option>';
+                        editor.data.forEach(editor => {
+                            options += `<option value="${editor.id}">${editor.nombre}</option>`;
+                        });
+                        document.getElementById('editor').innerHTML = options;
+                    } else {
+                        console.error('Error al obtener los editores:', editor.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error en la solicitud de obtener los editores:', error);
+                });
+            // Obtener los roles y agregarlos al select
+            fetch('https://localhost:7214/api/Usuario')
+                .then(response => response.json())
+                .then(usuario => {
+                    if (usuario.success) {
+                        let options = '<option value="">Selecciona un usuario</option>';
+                        usuario.data.forEach(usuario => {
+                            options += `<option value="${usuario.id}">${usuario.nombre}</option>`;
+                        });
+                        document.getElementById('usuario').innerHTML = options;
+                    } else {
+                        console.error('Error al obtener los usuario:', usuario.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error en la solicitud de obtener las usuario:', error);
+                });
+
             // Resto del código...
         } else {
             document.getElementById('tablita').hidden = false;
@@ -177,6 +177,7 @@ const crear = () => {
         return;
     }
 
+ 
 
 
     const juego = {
@@ -241,6 +242,7 @@ const modificar = () => {
         });
         return;
     }
+ 
 
     const juego = {
         nombre: nombre,

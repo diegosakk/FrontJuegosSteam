@@ -307,4 +307,6 @@ const validarCorreo = correo => {
     const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return correoRegex.test(correo);
 };
+
+
 cargarUsuario();

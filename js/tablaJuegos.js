@@ -136,16 +136,34 @@ console.log(juego)
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(juego)
-    }).then(response => {
-        console.log(response.json())
-
-        cargarJuegos()
-        var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
-        myModal.hide();
-        limpiar()
+        body: JSON.stringify(juego),
     })
-}
+        .then(response => {
+            if (response.ok) {
+                cargarJuegos();
+                var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
+                myModal.hide();
+                limpiar();
+                Swal.fire({
+                    title: 'Guardado',
+                    text: 'El juego ha sido guardado con éxito',
+                    icon: 'success',
+                });
+            } else {
+                response.json().then(data => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.message,
+                        icon: 'error',
+                    });
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error en la solicitud de guardar el juego:', error);
+        });
+};
+
 const modificar = () => {
     const nombre = document.getElementById('nombre').value.trim();
     const categoria = document.getElementById('categoria').value.trim();
@@ -165,8 +183,6 @@ const modificar = () => {
         return;
     }
 
-
-
     const juego = {
         nombre: nombre,
         categoria: categoria,
@@ -178,20 +194,39 @@ const modificar = () => {
 
     };
 
-    fetch('https://localhost:7214/api/juego/' + document.getElementById('id').value, {
+    fetch('https://localhost:7214/api/Juego/' + document.getElementById('id').value, {
         method: 'put',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(juego)
-    }).then(response => {
-        cargarJuegos()
-        const myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
-        myModal.hide();
-        limpiar()
+        body: JSON.stringify(juego),
     })
+        .then(response => {
+            if (response.ok) {
+                cargarJuegos();
+                const myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalSave'));
+                myModal.hide();
+                limpiar();
+                Swal.fire({
+                    title: 'Modificado',
+                    text: 'El juego ha sido modificado con éxito',
+                    icon: 'success',
+                });
+            } else {
+                response.json().then(data => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.message,
+                        icon: 'error',
+                    });
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error en la solicitud de editar el juego:', error);
+        });
+};
 
-}
 const guardar = () => {
     if (document.getElementById('id').value == '')
         crear()
@@ -200,9 +235,12 @@ const guardar = () => {
 }
 const limpiar = () => {
     document.querySelectorAll('.form-control').forEach(e => {
-        e.value = ''
-    })
-}
+        e.value = '';
+        e.parentElement.classList.remove('is-valid');
+    });
+    const formcat = document.getElementById('formJuegos');
+    formcat.reset();
+};
 //método para eliminar una sucursal
 const eliminar = (id) => {
     //levanta sweetalert que indica si se quiere eliminar
@@ -214,24 +252,26 @@ const eliminar = (id) => {
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
         confirmButtonText: 'Eliminar',
-    }).then((result) => {
+    }).then(result => {
         if (result.isConfirmed) {
-            //consumir api eliminar
             fetch(`https://localhost:7214/api/Juego/${id}`, {
-                method: 'delete'
-            }).then(response => {
-                Swal.fire(
-                    'Eliminado',
-                    'EL Juego ha sido eliminado con éxito',
-                    'success'
-                )
-                cargarJuegos()
+                method: 'delete',
             })
-
+                .then(response => {
+                    if (response.ok) {
+                        Swal.fire('Eliminado', 'El juego ha sido eliminado con éxito', 'success');
+                        cargarJuegos();
+                    } else {
+                        Swal.fire('Error', 'No se puede eliminar el juego ', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error', 'Ocurrió un error al eliminar el juego', 'error');
+                });
         }
-    })
-}
-
+    });
+};
 const editar = (id) => {
     fetch(`https://localhost:7214/api/Juego/${id}`)
         .then(response => response.json())

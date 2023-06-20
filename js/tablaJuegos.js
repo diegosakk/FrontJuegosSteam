@@ -128,10 +128,9 @@ const crear = () => {
         editor: editor,
         plataforma: plataforma,
         precio: precio,
-        usuario_registrado: usuario_registrado,
-
+        usuarioregistrado: usuario_registrado,
     };
-
+console.log(juego)
     fetch('https://localhost:7214/api/juego', {
         method: 'post',
         headers: {
